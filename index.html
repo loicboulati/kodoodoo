@@ -1592,7 +1592,8 @@ function doLogout(){
   currentUser = null;
   currentUserId = null;
   updateNavbar(false);
-  goPage('landing');
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('on'); });
+  document.getElementById('page-landing').classList.add('on');
   document.querySelectorAll('.ntab').forEach(function(t){ t.classList.remove('on'); });
   document.querySelector('.ntab').classList.add('on');
   toast('A bientot !', 'ok');
