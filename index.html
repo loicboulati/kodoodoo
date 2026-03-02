@@ -411,8 +411,8 @@ footer{background:var(--dark);border-top:1px solid rgba(255,255,255,.06);padding
   </a>
   <div class="nav-center">
     <button class="ntab on" onclick="switchNav(this,'landing')">Accueil</button>
-    <button class="ntab" onclick="switchNav(this,'parent');return false;">Espace Parent</button>
-    <button class="ntab" onclick="switchNav(this,'pro');return false;">Espace Pro</button>
+    <button class="ntab" onclick="if(currentUser && currentUser.role==='parent'){switchNav(this,'parent');updateParentUI();}else{switchNav(this,'parent');}return false;">Espace Parent</button>
+    <button class="ntab" onclick="if(currentUser && currentUser.role==='pro'){switchNav(this,'pro');updateProUI();}else{switchNav(this,'pro');}return false;">Espace Pro</button>
   </div>
   <div class="nav-right" id="nav-right">
     <button class="btn btn-ghost" onclick="openOverlay('login')" id="nav-btn-login">Se connecter</button>
@@ -1525,6 +1525,7 @@ async function doLogin(){
       }
 
       updateNavbar(true);
+      redirectToUserSpace();
       toast('Bienvenue ' + prenom + ' ! Bon retour.', 'ok');
     } else {
       var msg = data.error_description || data.msg || 'Email ou mot de passe incorrect';
@@ -1602,10 +1603,40 @@ function doLogout(){
 
 // Restore session on page load
 document.addEventListener('DOMContentLoaded', function(){
+  // Handle email confirmation redirect (token in URL hash)
+  var hash = window.location.hash;
+  if(hash && hash.indexOf('access_token') > -1){
+    var params = {};
+    hash.substring(1).split('&').forEach(function(p){
+      var kv = p.split('=');
+      params[kv[0]] = decodeURIComponent(kv[1] || '');
+    });
+    if(params.access_token){
+      localStorage.setItem('kodo_token', params.access_token);
+      // Clean URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+      // Fetch user info
+      fetch(SUPA_URL + '/auth/v1/user', {
+        headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + params.access_token }
+      }).then(function(r){ return r.json(); }).then(function(data){
+        if(data && data.id){
+          localStorage.setItem('kodo_user_id', data.id);
+          var meta = data.user_metadata || {};
+          currentUser = { id: data.id, email: data.email, prenom: meta.prenom || '', nom: meta.nom || '', role: meta.role || 'parent' };
+          currentUserId = data.id;
+          updateNavbar(true);
+          redirectToUserSpace();
+          toast('Email confirme ! Bienvenue ' + currentUser.prenom + ' !', 'ok');
+        }
+      }).catch(function(){});
+      return;
+    }
+  }
+
+  // Normal session restore from localStorage
   var token = localStorage.getItem('kodo_token');
   var userId = localStorage.getItem('kodo_user_id');
   if(token && userId){
-    // Try to restore user from token
     fetch(SUPA_URL + '/auth/v1/user', {
       headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + token }
     }).then(function(r){ return r.json(); }).then(function(data){
@@ -1624,6 +1655,23 @@ document.addEventListener('DOMContentLoaded', function(){
     });
   }
 });
+
+function redirectToUserSpace(){
+  if(!currentUser) return;
+  if(currentUser.role === 'pro'){
+    document.querySelectorAll('.ntab').forEach(function(t){ t.classList.remove('on'); });
+    document.querySelectorAll('.ntab')[2].classList.add('on');
+    document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('on'); });
+    document.getElementById('page-pro').classList.add('on');
+    updateProUI();
+  } else {
+    document.querySelectorAll('.ntab').forEach(function(t){ t.classList.remove('on'); });
+    document.querySelectorAll('.ntab')[1].classList.add('on');
+    document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('on'); });
+    document.getElementById('page-parent').classList.add('on');
+    updateParentUI();
+  }
+}
 
 function showPricing(type){
   var pro = document.getElementById('pricing-pro');
