@@ -1591,7 +1591,7 @@ async function loadProDashboard(){
     if(progEnfants) progEnfants.style.width = Math.min(enfants.length * 33, 100) + '%';
 
     // Update menu badge
-    var menuEnfants = document.querySelector('#page-pro .sb-menu .nbadge');
+    var menuEnfants = document.getElementById('badge-enfants');
     if(menuEnfants) menuEnfants.textContent = enfants.length > 0 ? enfants.length : '';
 
     // Update presences list
