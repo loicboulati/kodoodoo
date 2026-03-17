@@ -913,28 +913,32 @@ footer{background:var(--dark);border-top:1px solid rgba(255,255,255,.06);padding
 
       <!-- Dashboard Pro -->
       <div id="pro-pro-dashboard" class="sp on">
-        <div class="ph"><div><h2 id="pro-bonjour">Bonjour Christine 🌿</h2><div class="ph-sub">Lundi 23 février · 3 enfants présents</div></div>
+        <div class="ph"><div><h2 id="pro-bonjour">Bonjour Christine 🌿</h2><div class="ph-sub" id="pro-date-sub">Chargement...</div></div>
           <button class="btn btn-sage" onclick="showSP('pro','pro-cr',null)">+ Nouveau CR</button></div>
         <div class="grid4" style="margin-bottom:16px">
-          <div class="kpi sage"><div class="kpi-ico">👶</div><span class="kpi-val">3</span><div class="kpi-lbl">Enfants gardés</div></div>
-          <div class="kpi peach"><div class="kpi-ico">⏱️</div><span class="kpi-val">142h</span><div class="kpi-lbl">Heures ce mois</div></div>
-          <div class="kpi" style="border-top:3px solid var(--lavender)"><div class="kpi-ico">⭐</div><span class="kpi-val">4.9</span><div class="kpi-lbl">Note moyenne</div></div>
-          <div class="kpi" style="border-top:3px solid var(--sky)"><div class="kpi-ico">💶</div><span class="kpi-val">2 180€</span><div class="kpi-lbl">Revenus estimés</div></div>
+          <div class="kpi sage"><div class="kpi-ico">👶</div><span class="kpi-val" id="kpi-enfants">0</span><div class="kpi-lbl">Enfants gardés</div></div>
+          <div class="kpi peach"><div class="kpi-ico">⏱️</div><span class="kpi-val" id="kpi-heures">0h</span><div class="kpi-lbl">Heures ce mois</div></div>
+          <div class="kpi" style="border-top:3px solid var(--lavender)"><div class="kpi-ico">⭐</div><span class="kpi-val" id="kpi-note">-</span><div class="kpi-lbl">Note moyenne</div></div>
+          <div class="kpi" style="border-top:3px solid var(--sky)"><div class="kpi-ico">💶</div><span class="kpi-val" id="kpi-revenus">0€</span><div class="kpi-lbl">Revenus estimés</div></div>
         </div>
         <div class="grid2">
           <div class="card"><h4>📅 Présences du jour</h4>
-            <div class="child-list">
-              <div class="child-row"><div class="child-ava">👶</div><div><div class="child-name">Léo Martin</div><div class="child-age">18 mois · Arrivée 8h15</div></div><span class="badge-pill badge-green" style="margin-left:auto">✓ Présent</span></div>
-              <div class="child-row"><div class="child-ava">👧</div><div><div class="child-name">Emma Rousseau</div><div class="child-age">2 ans · Arrivée 8h00</div></div><span class="badge-pill badge-green" style="margin-left:auto">✓ Présente</span></div>
-              <div class="child-row"><div class="child-ava">👦</div><div><div class="child-name">Noah Bernard</div><div class="child-age">3 ans · Arrivée 9h00</div></div><span class="badge-pill badge-green" style="margin-left:auto">✓ Présent</span></div>
+            <div class="child-list" id="presences-list">
+              <div style="text-align:center;padding:24px;color:var(--soft)">
+                <div style="font-size:32px;margin-bottom:8px">👶</div>
+                <div>Aucun enfant pour aujourd hui</div>
+                <div style="font-size:12px;margin-top:4px">Invitez des familles pour commencer</div>
+              </div>
             </div>
           </div>
           <div class="card"><h4>📊 Ce mois</h4>
-            <div style="display:flex;flex-direction:column;gap:14px">
-              <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>Présences enregistrées</span><strong>68/72</strong></div><div class="prog-bar"><div class="prog-fill" style="width:94%"></div></div></div>
-              <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>Comptes rendus envoyés</span><strong>63/68</strong></div><div class="prog-bar"><div class="prog-fill" style="width:92%;background:linear-gradient(90deg,var(--peach-dark),var(--peach))"></div></div></div>
-              <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>Photos partagées</span><strong>47 photos</strong></div><div class="prog-bar"><div class="prog-fill" style="width:78%;background:linear-gradient(90deg,#8870C8,var(--lavender))"></div></div></div>
-              <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>Satisfaction familles</span><strong>4,9/5 ★</strong></div><div class="prog-bar"><div class="prog-fill" style="width:98%;background:linear-gradient(90deg,var(--sky),var(--sky-light))"></div></div></div>
+            <div style="display:flex;flex-direction:column;gap:14px" id="stats-mois">
+              <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>Enfants suivis</span><strong id="stat-enfants">0</strong></div><div class="prog-bar"><div class="prog-fill" id="prog-enfants" style="width:0%"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>Comptes rendus</span><strong id="stat-cr">0</strong></div><div class="prog-bar"><div class="prog-fill" id="prog-cr" style="width:0%;background:linear-gradient(90deg,var(--peach-dark),var(--peach))"></div></div></div>
+              <div style="margin-top:8px;padding:12px;background:var(--cream);border-radius:12px;font-size:13px;color:var(--soft);text-align:center" id="code-unique-box">
+                Votre code d invitation : <strong id="code-unique-display" style="color:var(--peach-dark);font-size:15px">-</strong>
+                <div style="font-size:11px;margin-top:4px">Partagez ce code aux familles pour qu'elles vous rejoignent</div>
+              </div>
             </div>
           </div>
         </div>
@@ -942,11 +946,16 @@ footer{background:var(--dark);border-top:1px solid rgba(255,255,255,.06);padding
 
       <!-- Enfants -->
       <div id="pro-pro-enfants" class="sp">
-        <div class="ph"><div><h2>Mes enfants</h2></div><button class="btn btn-sage" onclick="toast('💌 Invitation envoyée à la famille !')">+ Inviter une famille</button></div>
-        <div class="child-list">
-          <div class="child-row"><div class="child-ava">👶</div><div style="flex:1"><div class="child-name">Léo Martin</div><div class="child-age">18 mois · Depuis jan. 2026 · Sophie & Marc Martin</div></div><span class="badge-pill badge-green">Présent</span><button class="cr-btn" onclick="showSP('pro','pro-cr',null)">📝 CR</button></div>
-          <div class="child-row"><div class="child-ava">👧</div><div style="flex:1"><div class="child-name">Emma Rousseau</div><div class="child-age">2 ans · Depuis oct. 2025 · Julie Rousseau</div></div><span class="badge-pill badge-green">Présente</span><button class="cr-btn">📝 CR</button></div>
-          <div class="child-row"><div class="child-ava">👦</div><div style="flex:1"><div class="child-name">Noah Bernard</div><div class="child-age">3 ans · Depuis mars 2025 · Pierre & Claire Bernard</div></div><span class="badge-pill badge-green">Présent</span><button class="cr-btn">📝 CR</button></div>
+        <div class="ph"><div><h2>Mes enfants</h2></div><button class="btn btn-sage" onclick="inviterFamille()">+ Inviter une famille</button></div>
+        <div class="child-list" id="enfants-list">
+          <div style="text-align:center;padding:32px;color:var(--soft)">
+            <div style="font-size:40px;margin-bottom:12px">👨‍👩‍👧</div>
+            <div style="font-weight:600;margin-bottom:6px">Aucune famille connectée</div>
+            <div style="font-size:13px">Partagez votre code d invitation aux familles</div>
+            <div style="margin-top:16px;padding:12px;background:var(--cream);border-radius:12px;display:inline-block">
+              Code : <strong id="code-enfants-display" style="color:var(--peach-dark);font-size:16px">-</strong>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1546,11 +1555,106 @@ function updateProUI(){
   if(nameEl) nameEl.textContent = fullName;
   var bonjourEl = document.getElementById('pro-bonjour');
   if(bonjourEl) bonjourEl.textContent = 'Bonjour ' + prenom + ' !';
-  // Code unique dans le profil
-  if(currentUser.code){
-    var codeEls = document.querySelectorAll('.code-unique-display');
-    codeEls.forEach(function(el){ el.textContent = currentUser.code; });
+  // Date subtitle
+  var dateSub = document.getElementById('pro-date-sub');
+  if(dateSub){
+    var today = new Date().toLocaleDateString('fr-FR', {weekday:'long', day:'numeric', month:'long'});
+    dateSub.textContent = today.charAt(0).toUpperCase() + today.slice(1);
   }
+  // Code unique
+  if(currentUser.code){
+    var codeEl = document.getElementById('code-unique-display');
+    if(codeEl) codeEl.textContent = currentUser.code;
+    var codeEl2 = document.getElementById('code-enfants-display');
+    if(codeEl2) codeEl2.textContent = currentUser.code;
+  }
+  // Load real data from Supabase
+  loadProDashboard();
+}
+
+async function loadProDashboard(){
+  if(!currentUser || !currentUserId) return;
+  try {
+    // Load children linked to this pro
+    var liens = await supaFetch('/rest/v1/liens?nounou_id=eq.' + currentUserId + '&select=*,enfants(*)');
+    var enfants = [];
+    if(liens && liens.length > 0){
+      enfants = liens.map(function(l){ return l.enfants; }).filter(Boolean);
+    }
+
+    // Update KPIs
+    var kpiEnfants = document.getElementById('kpi-enfants');
+    if(kpiEnfants) kpiEnfants.textContent = enfants.length;
+    var statEnfants = document.getElementById('stat-enfants');
+    if(statEnfants) statEnfants.textContent = enfants.length;
+    var progEnfants = document.getElementById('prog-enfants');
+    if(progEnfants) progEnfants.style.width = Math.min(enfants.length * 33, 100) + '%';
+
+    // Update menu badge
+    var menuEnfants = document.querySelector('#page-pro .sb-menu .nbadge');
+    if(menuEnfants) menuEnfants.textContent = enfants.length > 0 ? enfants.length : '';
+
+    // Update presences list
+    var presencesList = document.getElementById('presences-list');
+    var enfantsList = document.getElementById('enfants-list');
+
+    if(enfants.length === 0){
+      if(presencesList) presencesList.innerHTML = '<div style="text-align:center;padding:24px;color:var(--soft)"><div style="font-size:32px;margin-bottom:8px">👶</div><div>Aucun enfant pour aujourd hui</div><div style="font-size:12px;margin-top:4px">Partagez votre code aux familles</div></div>';
+      if(enfantsList) {
+        var code = currentUser.code || '-';
+        enfantsList.innerHTML = '<div style="text-align:center;padding:32px;color:var(--soft)"><div style="font-size:40px;margin-bottom:12px">👨‍👩‍👧</div><div style="font-weight:600;margin-bottom:6px">Aucune famille connectée</div><div style="font-size:13px">Partagez votre code d invitation aux familles</div><div style="margin-top:16px;padding:12px;background:var(--cream);border-radius:12px;display:inline-block">Code : <strong style="color:var(--peach-dark);font-size:16px">' + code + '</strong></div></div>';
+      }
+    } else {
+      // Show real children
+      var avatars = ['👶','👧','👦','🧒','👼'];
+      var presencesHTML = '';
+      var enfantsHTML = '';
+      enfants.forEach(function(e, i){
+        var ava = avatars[i % avatars.length];
+        var age = '';
+        if(e.date_naissance){
+          var months = Math.floor((new Date() - new Date(e.date_naissance)) / (1000*60*60*24*30));
+          age = months < 24 ? months + ' mois' : Math.floor(months/12) + ' ans';
+        }
+        presencesHTML += '<div class="child-row"><div class="child-ava">' + ava + '</div><div><div class="child-name">' + e.prenom + '</div><div class="child-age">' + age + '</div></div><span class="badge-pill badge-green" style="margin-left:auto">✓ Présent</span></div>';
+        enfantsHTML += ["<div class=chr>","<div class=ca>",ava,"</div><div style=flex:1><div class=cn>",e.prenom,"</div><div class=cage>",age,"</div></div><button class=cr-btn onclick=docrBtn()>CR</button></div>"].join("");
+      });
+      if(presencesList) presencesList.innerHTML = presencesHTML;
+      if(enfantsList) enfantsList.innerHTML = enfantsHTML;
+      if(kpiEnfants) kpiEnfants.textContent = enfants.length;
+
+      // Also update CR select
+      var crSelect = document.querySelector('#pro-pro-cr select');
+      if(crSelect){
+        crSelect.innerHTML = enfants.map(function(e){
+          var months = e.date_naissance ? Math.floor((new Date() - new Date(e.date_naissance)) / (1000*60*60*24*30)) : 0;
+          var age = months < 24 ? months + ' mois' : Math.floor(months/12) + ' ans';
+          return '<option>' + e.prenom + ' · ' + age + '</option>';
+        }).join('');
+      }
+    }
+
+    // Load pro profile for code
+    if(!currentUser.code){
+      var nounouData = await supaFetch('/rest/v1/nourrices?id=eq.' + currentUserId + '&select=code_unique,agrement,ville');
+      if(nounouData && nounouData.length > 0){
+        currentUser.code = nounouData[0].code_unique;
+        var codeEl = document.getElementById('code-unique-display');
+        if(codeEl) codeEl.textContent = currentUser.code;
+        var codeEl2 = document.getElementById('code-enfants-display');
+        if(codeEl2) codeEl2.textContent = currentUser.code;
+      }
+    }
+
+  } catch(e){
+    console.log('loadProDashboard error:', e);
+  }
+}
+
+function inviterFamille(){
+  var code = currentUser && currentUser.code ? currentUser.code : '...';
+  toast('Code copie : ' + code, 'ok');
+  if(navigator.clipboard) navigator.clipboard.writeText(code).catch(function(){});
 }
 
 function updateParentUI(){
