@@ -411,8 +411,8 @@ footer{background:var(--dark);border-top:1px solid rgba(255,255,255,.06);padding
   </a>
   <div class="nav-center">
     <button class="ntab on" onclick="switchNav(this,'landing')">Accueil</button>
-    <button class="ntab" onclick="if(currentUser && currentUser.role==='parent'){switchNav(this,'parent');updateParentUI();}else{switchNav(this,'parent');}return false;">Espace Parent</button>
-    <button class="ntab" onclick="if(currentUser && currentUser.role==='pro'){switchNav(this,'pro');updateProUI();}else{switchNav(this,'pro');}return false;">Espace Pro</button>
+    <button class="ntab" onclick="switchNav(this,'parent');if(currentUser && currentUser.role==='parent'){updateParentUI();}return false;">Espace Parent</button>
+    <button class="ntab" onclick="switchNav(this,'pro');if(currentUser && currentUser.role==='pro'){updateProUI();}return false;">Espace Pro</button>
   </div>
   <div class="nav-right" id="nav-right">
     <button class="btn btn-ghost" onclick="openOverlay('login')" id="nav-btn-login">Se connecter</button>
@@ -1707,19 +1707,19 @@ function doLogout(){
 
 // Restore session on page load
 document.addEventListener('DOMContentLoaded', function(){
-  // Handle email confirmation redirect (token in URL hash)
+  // Handle email confirmation redirect (token in URL hash or query)
   var hash = window.location.hash;
-  if(hash && hash.indexOf('access_token') > -1){
+  var search = window.location.search;
+  var tokenStr = hash || search;
+  if(tokenStr && tokenStr.indexOf('access_token') > -1){
     var params = {};
-    hash.substring(1).split('&').forEach(function(p){
+    tokenStr.replace(/^[#?]/, '').split('&').forEach(function(p){
       var kv = p.split('=');
       params[kv[0]] = decodeURIComponent(kv[1] || '');
     });
     if(params.access_token){
       localStorage.setItem('kodo_token', params.access_token);
-      // Clean URL
       window.history.replaceState({}, document.title, window.location.pathname);
-      // Fetch user info
       fetch(SUPA_URL + '/auth/v1/user', {
         headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + params.access_token }
       }).then(function(r){ return r.json(); }).then(function(data){
@@ -1729,8 +1729,11 @@ document.addEventListener('DOMContentLoaded', function(){
           currentUser = { id: data.id, email: data.email, prenom: meta.prenom || '', nom: meta.nom || '', role: meta.role || 'parent' };
           currentUserId = data.id;
           updateNavbar(true);
-          redirectToUserSpace();
+          // Show welcome message then redirect
           toast('Email confirme ! Bienvenue ' + currentUser.prenom + ' !', 'ok');
+          setTimeout(function(){
+            redirectToUserSpace();
+          }, 800);
         }
       }).catch(function(){});
       return;
@@ -1764,15 +1767,19 @@ function redirectToUserSpace(){
   if(!currentUser) return;
   if(currentUser.role === 'pro'){
     document.querySelectorAll('.ntab').forEach(function(t){ t.classList.remove('on'); });
-    document.querySelectorAll('.ntab')[2].classList.add('on');
+    var proTab = document.querySelector('.ntab:nth-child(3)');
+    if(proTab) proTab.classList.add('on');
     document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('on'); });
     document.getElementById('page-pro').classList.add('on');
+    showSP('pro','pro-dashboard',null);
     updateProUI();
   } else {
     document.querySelectorAll('.ntab').forEach(function(t){ t.classList.remove('on'); });
-    document.querySelectorAll('.ntab')[1].classList.add('on');
+    var parentTab = document.querySelector('.ntab:nth-child(2)');
+    if(parentTab) parentTab.classList.add('on');
     document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('on'); });
     document.getElementById('page-parent').classList.add('on');
+    showSP('parent','dashboard',null);
     updateParentUI();
   }
 }
